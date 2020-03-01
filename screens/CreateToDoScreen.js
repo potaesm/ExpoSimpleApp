@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, AsyncStorage } from 'react-native';
 import { Input, Card, Overlay, Button } from 'react-native-elements';
 
 import { deviceWidth, scaleFactor, deviceHeight } from '../data';
@@ -14,10 +14,21 @@ class CreateToDoScreen extends Component {
         },
         title: 'CREATE'
     };
-    state = { title: '', detail: '', isVisible: false };
+    state = { title: '', detail: '', isVisible: false, id: null };
 
     fetchData = async (collection) => {
         await this.props.GetData(collection);
+    }
+
+    async componentDidMount() {
+        let token = await AsyncStorage.getItem('fb_token');
+        if (token) {
+            const response = await fetch(
+                `https://graph.facebook.com/me?access_token=${token}&fields=id,name,picture.type(large)`
+            );
+            let { id } = await response.json();
+            this.setState({ id });
+        }
     }
 
     componentWillReceiveProps(nextProps) {
@@ -32,19 +43,20 @@ class CreateToDoScreen extends Component {
 
     render() {
         const { textStyle, modalStyle } = styles;
-
         return (
             <View>
                 <Card title="Create Todo">
                     <View style={{ flexDirection: 'column', alignItems: 'center', justifyContent: 'space-between' }}>
                         <Input
                             placeholder='Title'
+                            inputStyle={textStyle}
                             onChangeText={(title) => this.setState({ title })}
                             value={this.state.title}
                         />
                         <View style={{ marginTop: deviceHeight / 50 }}></View>
                         <Input
                             placeholder='Detail'
+                            inputStyle={textStyle}
                             onChangeText={(detail) => this.setState({ detail })}
                             value={this.state.detail}
                         />
@@ -68,7 +80,7 @@ class CreateToDoScreen extends Component {
                                 titleStyle={textStyle}
                                 title="OK"
                                 raised
-                                onPress={async () => { await this.props.CreateData('ToDoData', { title: this.state.title, detail: this.state.detail }); await this.fetchData('ToDoData'); this.setState({ isVisible: false, title: '', detail: '' }); }}
+                                onPress={async () => { await this.props.CreateData(`ExpoSimpleApp_${this.state.id}`, { title: this.state.title, detail: this.state.detail }); await this.fetchData(`ExpoSimpleApp_${this.state.id}`); this.setState({ isVisible: false, title: '', detail: '' }); }}
                             />
                             <Button
                                 buttonStyle={{ width: deviceWidth / 4, backgroundColor: '#FF5252' }}

@@ -23,15 +23,13 @@ class HomeScreen extends Component {
 
     _onRefresh = () => {
         this.setState({ refreshing: true });
-        this.fetchData('ToDoData').then(() => {
+        this.fetchData(`ExpoSimpleApp_${this.state.id}`).then(() => {
             this.setState({ refreshing: false });
         });
     }
 
     async componentDidMount() {
-        await this.fetchData('ToDoData');
         BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
-
         let token = await AsyncStorage.getItem('fb_token');
         if (token) {
             const response = await fetch(
@@ -39,6 +37,7 @@ class HomeScreen extends Component {
             );
             let { id, name, picture } = await response.json();
             this.setState({ picture: picture.data.url, name, id });
+            await this.fetchData(`ExpoSimpleApp_${this.state.id}`);
         }
     }
 
@@ -90,7 +89,7 @@ class HomeScreen extends Component {
                                     subtitleStyle={detailStyle}
                                     bottomDivider
                                     chevron
-                                    onPress={() => { this.props.navigation.navigate('edit', { title: item.title }) }}
+                                    onPress={() => { this.props.navigation.navigate('edit', { title: item.title, detail: item.detail, itemId: item.id, userId: this.state.id }) }}
                                     onLongPress={() => { this.setState({ isVisible: true }); this.setState({ selectedItem: item.id }); }}
                                 />
                             ))
@@ -105,7 +104,7 @@ class HomeScreen extends Component {
                                     titleStyle={textStyle}
                                     title="OK"
                                     raised
-                                    onPress={async () => { await this.props.DeleteData('ToDoData', this.state.selectedItem); await this.fetchData('ToDoData'); this.setState({ isVisible: false }); }}
+                                    onPress={async () => { await this.props.DeleteData(`ExpoSimpleApp_${this.state.id}`, this.state.selectedItem); await this.fetchData(`ExpoSimpleApp_${this.state.id}`); this.setState({ isVisible: false }); }}
                                 />
                                 <Button
                                     buttonStyle={{ width: deviceWidth / 4, backgroundColor: '#FF5252' }}

@@ -6,3 +6,5 @@ export const DELETE_DATA_SUCCESS = 'delete_data_success';
 export const DELETE_DATA_FAIL = 'delete_data_fail';
 export const CREATE_DATA_SUCCESS = 'create_data_success';
 export const CREATE_DATA_FAIL = 'create_data_fail';
+export const EDIT_DATA_SUCCESS = 'edit_data_success';
+export const EDIT_DATA_FAIL = 'edit_data_fail';
