@@ -4,6 +4,9 @@
     "slug": "expo-simple-app",
     "privacy": "public",
     "sdkVersion": "36.0.0",
+    "facebookScheme": "fb557309914994019",
+    "facebookAppId": "557309914994019",
+    "facebookDisplayName": "ExpoSimpleApp",
     "platforms": [
       "ios",
       "android",
@@ -24,7 +27,19 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": false,
+      "bundleIdentifier": "com.suthinan.exposimpleapp",
+      "infoPlist": {
+        "LSApplicationQueriesSchemes": [
+          "fbapi",
+          "fb-messenger-share-api",
+          "fbauth2",
+          "fbshareextension"
+        ]
+      }
+    },
+    "android": {
+      "package": "com.suthinan.exposimpleapp"
     }
   }
 }

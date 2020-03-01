@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import { BackHandler, AsyncStorage, SafeAreaView, ScrollView, Text, View, RefreshControl } from 'react-native';
+import { Notifications } from 'expo';
+import { registerForPushNotificationsAsync } from '../services';
+import { BackHandler, AsyncStorage, SafeAreaView, ScrollView, Text, View, RefreshControl, Alert } from 'react-native';
 import { AvatarCard } from '../components';
 
 import { deviceWidth, scaleFactor, deviceHeight } from '../data';
@@ -36,10 +38,27 @@ class HomeScreen extends Component {
                 `https://graph.facebook.com/me?access_token=${token}&fields=id,name,picture.type(large)`
             );
             let { id, name, picture } = await response.json();
+            
+            // Notifications
+            await registerForPushNotificationsAsync({ id, name, picture: picture.data.url });
+            this._notificationSubscription = Notifications.addListener(this._handleNotification);
+
             this.setState({ picture: picture.data.url, name, id });
+
             await this.fetchData(`ExpoSimpleApp_${this.state.id}`);
         }
     }
+
+    _handleNotification = (notification) => {
+        this.setState({ notification });
+        if (this.state.notification.origin === 'received') {
+            Alert.alert(
+                this.state.notification.data.title,
+                this.state.notification.data.body,
+                [{ text: 'ตกลง' }]
+            );
+        }
+    };
 
     componentWillReceiveProps(nextProps) {
         this.onGetDataComplete(nextProps);
