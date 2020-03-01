@@ -1,0 +1,22 @@
+import { GET_DATA_SUCCESS, GET_DATA_FAIL } from './types';
+
+export const GetData = (collection) => async (dispatch) => {
+    const URL = `https://asia-east2-simplecloudfirestoreapi.cloudfunctions.net/api?collection=${collection}`;
+    try {
+        let dataArray = [];
+        const response = await fetch(URL, { method: 'GET', headers: new Headers({ 'Content-Type': 'application/json' }) });
+        const responseJson = await response.json();
+        for (const item of responseJson) {
+            await dataArray.push(item);
+        }
+        if (dataArray.length !== 0) {
+            return dispatch({ type: GET_DATA_SUCCESS, payload: dataArray });
+        } else {
+            return dispatch({ type: GET_DATA_FAIL });
+        }
+
+    }
+    catch (Error) {
+        console.log(Error);
+    }
+};

@@ -4,7 +4,9 @@ import { AvatarCard } from '../components';
 
 import { deviceWidth, scaleFactor, deviceHeight } from '../data';
 import { ListItem, Card, Overlay, Button } from 'react-native-elements';
-import { GetData, DeleteData } from '../services';
+
+import { connect } from 'react-redux';
+import * as actions from '../actions';
 
 class HomeScreen extends Component {
     static navigationOptions = {
@@ -15,19 +17,19 @@ class HomeScreen extends Component {
     };
     state = { picture: null, name: null, id: null, todoList: [], isVisible: false, selectedItem: null, refreshing: false };
 
-    fetchData = async () => {
-        this.setState({ todoList: await GetData('ToDoData') });
+    fetchData = async (collection) => {
+        await this.props.GetData(collection);
     }
 
     _onRefresh = () => {
         this.setState({ refreshing: true });
-        this.fetchData().then(() => {
+        this.fetchData('ToDoData').then(() => {
             this.setState({ refreshing: false });
         });
     }
 
     async componentDidMount() {
-        await this.fetchData();
+        await this.fetchData('ToDoData');
         BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
 
         let token = await AsyncStorage.getItem('fb_token');
@@ -40,6 +42,23 @@ class HomeScreen extends Component {
         }
     }
 
+    componentWillReceiveProps(nextProps) {
+        this.onGetDataComplete(nextProps);
+        this.onDeleteDataComplete(nextProps);
+    }
+
+    onGetDataComplete(props) {
+        if (props.todoData) {
+            this.setState({ todoList: props.todoData });
+        }
+    }
+
+    onDeleteDataComplete(props) {
+        if (props.deleteResponse) {
+            console.log(props.deleteResponse);
+        }
+    }
+
     componentWillUnmount() {
         BackHandler.removeEventListener('hardwareBackPress', this.handleBackButton);
     }
@@ -48,12 +67,8 @@ class HomeScreen extends Component {
         return true;
     }
 
-    onListItemPress(title) {
-        console.log(`${title} is Pressed`);
-    }
-
     render() {
-        const { viewStyle, textStyle, buttonStyle, modalStyle } = styles;
+        const { textStyle, modalStyle, detailStyle } = styles;
 
         return (
             <SafeAreaView>
@@ -69,8 +84,10 @@ class HomeScreen extends Component {
                             this.state.todoList.map((item, i) => (
                                 <ListItem
                                     key={i}
-                                    title={item.title}
+                                    title={((item.title).length > 25) ? ((item.title.substring(0, 25 - 3)) + '...') : item.title}
                                     titleStyle={textStyle}
+                                    subtitle={(item.detail !== undefined && (item.detail).length > 25) ? ((item.detail.substring(0, 25 - 3)) + '...') : item.detail}
+                                    subtitleStyle={detailStyle}
                                     bottomDivider
                                     chevron
                                     onPress={() => { this.props.navigation.navigate('edit', { title: item.title }) }}
@@ -88,7 +105,7 @@ class HomeScreen extends Component {
                                     titleStyle={textStyle}
                                     title="OK"
                                     raised
-                                    onPress={async () => { await DeleteData('ToDoData', this.state.selectedItem); this.setState({ isVisible: false }); this.setState({ todoList: await GetData('ToDoData') }); }}
+                                    onPress={async () => { await this.props.DeleteData('ToDoData', this.state.selectedItem); await this.fetchData('ToDoData'); this.setState({ isVisible: false }); }}
                                 />
                                 <Button
                                     buttonStyle={{ width: deviceWidth / 4, backgroundColor: '#FF5252' }}
@@ -107,11 +124,6 @@ class HomeScreen extends Component {
 }
 
 const styles = {
-    viewStyle: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
     modalStyle: {
         textAlign: 'center',
         fontFamily: 'Kanit-Regular',
@@ -121,10 +133,15 @@ const styles = {
         fontFamily: 'Kanit-Regular',
         fontSize: 16 * scaleFactor,
     },
-    buttonStyle: {
-        width: deviceWidth * 60 / 100,
-        marginTop: deviceHeight * 5 / 100
+    detailStyle: {
+        fontFamily: 'Kanit-Regular',
+        fontSize: 14 * scaleFactor,
+        color: '#7D7D7D'
     }
 };
 
-export default HomeScreen;
+function mapStateToProps({ get, del }) {
+    return { todoData: get.data, deleteResponse: del.data };
+}
+
+export default connect(mapStateToProps, actions)(HomeScreen);

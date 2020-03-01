@@ -19,7 +19,7 @@ HomeStack.navigationOptions = {
 const CreateToDoStack = createStackNavigator({ create: CreateToDoScreen });
 CreateToDoStack.navigationOptions = {
     tabBarLabel: 'Create',
-    tabBarIcon: ({ tintColor }) => <Icon name="list" size={25} color={tintColor} />
+    tabBarIcon: ({ tintColor }) => <Icon name="add" size={25} color={tintColor} />
 };
 
 const MainNavigator = createBottomTabNavigator({
