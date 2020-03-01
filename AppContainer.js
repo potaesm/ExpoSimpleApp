@@ -9,6 +9,7 @@ import AuthScreen from './screens/AuthScreen';
 import HomeScreen from './screens/HomeScreen';
 import EditToDoScreen from './screens/EditToDoScreen';
 import CreateToDoScreen from './screens/CreateToDoScreen';
+import NotificationScreen from './screens/NotificationScreen';
 
 const HomeStack = createStackNavigator({ home: HomeScreen, edit: EditToDoScreen });
 HomeStack.navigationOptions = {
@@ -22,9 +23,16 @@ CreateToDoStack.navigationOptions = {
     tabBarIcon: ({ tintColor }) => <Icon name="add" size={25} color={tintColor} />
 };
 
+const NotificationStack = createStackNavigator({ noti: NotificationScreen });
+NotificationStack.navigationOptions = {
+    tabBarLabel: 'Notification',
+    tabBarIcon: ({ tintColor }) => <Icon name="input" size={25} color={tintColor} />
+};
+
 const MainNavigator = createBottomTabNavigator({
     home: HomeStack,
-    create: CreateToDoStack
+    create: CreateToDoStack,
+    noti: NotificationStack
 },
     {
         tabBarOptions: { labelStyle: { fontFamily: 'Kanit-Regular', fontSize: 12 } }

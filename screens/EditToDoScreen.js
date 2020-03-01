@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, SafeAreaView } from 'react-native';
 import { Input, Card, Overlay, Button } from 'react-native-elements';
 
 import { deviceWidth, scaleFactor, deviceHeight } from '../data';
@@ -40,7 +40,7 @@ class EditToDoScreen extends Component {
     render() {
         const { textStyle, modalStyle } = styles;
         return (
-            <View>
+            <SafeAreaView>
                 <Card title="Edit Todo">
                     <View style={{ flexDirection: 'column', alignItems: 'center', justifyContent: 'space-between' }}>
                         <Input
@@ -88,7 +88,7 @@ class EditToDoScreen extends Component {
                         </View>
                     </View>
                 </Overlay>
-            </View>
+            </SafeAreaView>
         );
     }
 }

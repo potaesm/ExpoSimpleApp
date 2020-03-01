@@ -8,3 +8,7 @@ export const CREATE_DATA_SUCCESS = 'create_data_success';
 export const CREATE_DATA_FAIL = 'create_data_fail';
 export const EDIT_DATA_SUCCESS = 'edit_data_success';
 export const EDIT_DATA_FAIL = 'edit_data_fail';
+export const GET_USER_DATA_SUCCESS = 'get_user_data_success';
+export const GET_USER_DATA_FAIL = 'get_user_data_fail';
+export const SEND_NOTI_SUCCESS = 'send_noti_success';
+export const SEND_NOTI_FAIL = 'send_noti_fail';
