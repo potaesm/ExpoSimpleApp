@@ -4,6 +4,9 @@ import { SafeAreaView, Text, AsyncStorage, YellowBox } from 'react-native';
 import { AppLoading } from 'expo';
 import { SocialIcon } from 'react-native-elements';
 
+import moment from 'moment';
+import 'moment/locale/th';
+
 import { deviceWidth, scaleFactor, deviceHeight } from '../data';
 
 YellowBox.ignoreWarnings(['componentWillReceiveProps']);
@@ -19,6 +22,10 @@ class WelcomeScreen extends Component {
 
     async componentDidMount() {
         let token = await AsyncStorage.getItem('fb_token');
+        let expires = await AsyncStorage.getItem('fb_token_expires');
+        let currentDate = moment().format('X');
+
+        console.log(currentDate, expires);
 
         if (token) {
             this.props.navigation.navigate('main');
