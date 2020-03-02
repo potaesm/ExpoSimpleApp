@@ -27,12 +27,22 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": false,
+      "supportsTablet": true,
       "bundleIdentifier": "com.suthinan.exposimpleapp",
       "infoPlist": {
         "LSApplicationQueriesSchemes": [
           "fbapi",
-          "fb-messenger-share-api",
+          "fbapi20130214",
+          "fbapi20130410",
+          "fbapi20130702",
+          "fbapi20131010",
+          "fbapi20131219",
+          "fbapi20140410",
+          "fbapi20140116",
+          "fbapi20150313",
+          "fbapi20150629",
+          "fbapi20160328",
+          "fbauth",
           "fbauth2",
           "fbshareextension"
         ]
