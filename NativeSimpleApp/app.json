@@ -1,0 +1,65 @@
+{
+  "expo": {
+    "name": "Blank Template",
+    "slug": "NativeExpoSimpleApp",
+    "privacy": "public",
+    "sdkVersion": "36.0.0",
+    "facebookScheme": "fb557309914994019",
+    "facebookAppId": "557309914994019",
+    "facebookDisplayName": "ExpoSimpleApp",
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.suthinan.nativeexposimpleapp",
+      "publishBundlePath": "ios/blank-template/Supporting/shell-app.bundle",
+      "publishManifestPath": "ios/blank-template/Supporting/shell-app-manifest.json",
+      "infoPlist": {
+        "LSApplicationQueriesSchemes": [
+          "fbapi",
+          "fbapi20130214",
+          "fbapi20130410",
+          "fbapi20130702",
+          "fbapi20131010",
+          "fbapi20131219",
+          "fbapi20140410",
+          "fbapi20140116",
+          "fbapi20150313",
+          "fbapi20150629",
+          "fbapi20160328",
+          "fbauth",
+          "fbauth2",
+          "fbshareextension"
+        ]
+      }
+    },
+    "isDetached": true,
+    "detach": {
+      "iosExpoViewUrl": "https://s3.amazonaws.com/exp-exponent-view-code/ios-v2.14.3-sdk36.0.0-00f587c0-b8c9-4b6b-88f6-2ccd4f20dc9c.tar.gz",
+      "androidExpoViewUrl": "https://s3.amazonaws.com/exp-exponent-view-code/android-v2.14.2-sdk36.0.0-ce7e16db-fd5d-4fdd-bdeb-701ba94a04d1.tar.gz"
+    },
+    "scheme": "expda86c2c91de2480cb7b7c110d57358ad",
+    "android": {
+      "package": "com.suthinan.nativeexposimpleapp",
+      "publishBundlePath": "android/app/src/main/assets/shell-app.bundle",
+      "publishManifestPath": "android/app/src/main/assets/shell-app-manifest.json"
+    }
+  }
+}
