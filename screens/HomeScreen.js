@@ -10,6 +10,8 @@ import { ListItem, Card, Overlay, Button } from 'react-native-elements';
 import { connect } from 'react-redux';
 import * as actions from '../actions';
 
+import MqttService from '../services/mqtt_service';
+
 class HomeScreen extends Component {
     static navigationOptions = {
         headerTitleStyle: {
@@ -17,7 +19,7 @@ class HomeScreen extends Component {
         },
         title: 'HOME'
     };
-    state = { picture: null, name: null, id: null, todoList: [], isVisible: false, selectedItem: null, refreshing: false };
+    state = { picture: null, name: null, id: null, todoList: [], isVisible: false, selectedItem: null, refreshing: false, brokerIsConnected: false, message: '', onMessage: false };
 
     fetchData = async (collection) => {
         await this.props.GetData(collection);
@@ -31,6 +33,7 @@ class HomeScreen extends Component {
     }
 
     async componentDidMount() {
+        MqttService.connectClient(this.mqttSuccessHandler, this.mqttConnectionLostHandler);
         BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
         let token = await AsyncStorage.getItem('fb_token');
         if (token) {
@@ -38,7 +41,7 @@ class HomeScreen extends Component {
                 `https://graph.facebook.com/me?access_token=${token}&fields=id,name,picture.type(large)`
             );
             let { id, name, picture } = await response.json();
-            
+
             // Notifications
             await registerForPushNotificationsAsync({ id, name, picture: picture.data.url });
             this._notificationSubscription = Notifications.addListener(this._handleNotification);
@@ -48,6 +51,21 @@ class HomeScreen extends Component {
             await this.fetchData(`ExpoSimpleApp_${this.state.id}`);
         }
     }
+
+    onMessage = (message) => {
+        this.setState({ message });
+        this.setState({ onMessage: true });
+    }
+
+    mqttSuccessHandler = () => {
+        console.info("connected to mqtt");
+        MqttService.subscribe('message', this.onMessage)
+        this.setState({ brokerIsConnected: true });
+    };
+
+    mqttConnectionLostHandler = () => {
+        this.setState({ brokerIsConnected: false });
+    };
 
     _handleNotification = (notification) => {
         this.setState({ notification });
@@ -114,6 +132,20 @@ class HomeScreen extends Component {
                             ))
                         }
                     </Card>
+                    <Overlay isVisible={this.state.onMessage} height={deviceHeight / 4}>
+                        <View style={{ justifyContent: 'space-around', flex: 1 }}>
+                            <Text style={modalStyle}>{this.state.message}</Text>
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
+                                <Button
+                                    buttonStyle={{ width: deviceWidth / 4, backgroundColor: '#448AFF' }}
+                                    titleStyle={textStyle}
+                                    title="OK"
+                                    raised
+                                    onPress={async () => { this.setState({ onMessage: false }); }}
+                                />
+                            </View>
+                        </View>
+                    </Overlay>
                     <Overlay isVisible={this.state.isVisible} height={deviceHeight / 4}>
                         <View style={{ justifyContent: 'space-around', flex: 1 }}>
                             <Text style={modalStyle}>DELETE THIS TODO?</Text>

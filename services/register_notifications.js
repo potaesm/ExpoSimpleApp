@@ -26,16 +26,6 @@ export const registerForPushNotificationsAsync = async (user) => {
     console.log(token);
     // POST the token to your backend server from where you can retrieve it to send push notifications.
     return fetch(PUSH_ENDPOINT, {
-        method: 'POST',
-        headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            user,
-            token: {
-                value: token
-            }
-        }),
+        method: 'POST', headers: new Headers({ 'Content-Type': 'application/json' }), body: JSON.stringify({ user, token: { value: token } })
     });
 };
