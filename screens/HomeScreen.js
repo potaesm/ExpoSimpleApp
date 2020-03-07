@@ -1,5 +1,6 @@
+import _ from 'lodash';
 import React, { Component } from 'react';
-import { Notifications } from 'expo';
+import { Notifications, AppLoading } from 'expo';
 import { registerForPushNotificationsAsync } from '../services';
 import { BackHandler, AsyncStorage, SafeAreaView, ScrollView, Text, View, RefreshControl, Alert } from 'react-native';
 import { AvatarCard } from '../components';
@@ -41,12 +42,11 @@ class HomeScreen extends Component {
                 `https://graph.facebook.com/me?access_token=${token}&fields=id,name,picture.type(large)`
             );
             let { id, name, picture } = await response.json();
+            this.setState({ picture: picture.data.url, name, id });
 
             // Notifications
             await registerForPushNotificationsAsync({ id, name, picture: picture.data.url });
             this._notificationSubscription = Notifications.addListener(this._handleNotification);
-
-            this.setState({ picture: picture.data.url, name, id });
 
             await this.fetchData(`ExpoSimpleApp_${this.state.id}`);
         }
@@ -96,6 +96,7 @@ class HomeScreen extends Component {
     }
 
     componentWillUnmount() {
+        MqttService.unsubscribe('message');
         BackHandler.removeEventListener('hardwareBackPress', this.handleBackButton);
     }
 
@@ -105,6 +106,10 @@ class HomeScreen extends Component {
 
     render() {
         const { textStyle, modalStyle, detailStyle } = styles;
+
+        if (_.isNull(this.state.picture)) {
+            return <AppLoading />;
+        }
 
         return (
             <SafeAreaView>

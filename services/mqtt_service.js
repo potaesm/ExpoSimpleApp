@@ -58,7 +58,7 @@ class MqttService {
         ], { cancelable: false });
     };
 
-    onMessageArrived = message => {
+    onMessageArrived = (message) => {
         const { payloadString, topic } = message;
         this.callbacks[topic](payloadString);
     };
@@ -80,7 +80,7 @@ class MqttService {
         this.client.subscribe(topic);
     };
 
-    unsubscribe = topic => {
+    unsubscribe = (topic) => {
         if (!this.isConnected) {
             console.info('not connected');
             return;

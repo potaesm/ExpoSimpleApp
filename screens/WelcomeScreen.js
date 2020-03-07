@@ -24,23 +24,24 @@ class WelcomeScreen extends Component {
         let token = await AsyncStorage.getItem('fb_token');
         let expires = await AsyncStorage.getItem('fb_token_expires');
         let currentDate = moment().format('X');
-
-        console.log(currentDate, expires);
-
         if (token) {
-            this.props.navigation.navigate('main');
-            this.setState({ token });
+            if (currentDate === expires) {
+                this.props.navigation.navigate('auth');
+            } else {
+                this.props.navigation.navigate('main');
+                this.setState({ token });
+            }
         } else {
             this.setState({ token: false });
         }
     }
 
     render() {
+        const { viewStyle, textStyle, buttonStyle } = styles;
+
         if (_.isNull(this.state.token)) {
             return <AppLoading />;
         }
-
-        const { viewStyle, textStyle, buttonStyle } = styles;
 
         return (
             <SafeAreaView style={viewStyle}>
