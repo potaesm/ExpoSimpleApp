@@ -58,7 +58,7 @@ class HomeScreen extends Component {
     }
 
     mqttSuccessHandler = () => {
-        console.info("connected to mqtt");
+        console.info("Connected to MQTT");
         MqttService.subscribe('message', this.onMessage)
         this.setState({ brokerIsConnected: true });
     };
